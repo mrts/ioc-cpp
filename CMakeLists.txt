@@ -1,0 +1,35 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+SET (CMAKE_BACKWARDS_COMPATIBILITY 2.6)
+
+PROJECT(ioccpp)
+
+# --- libtestcpp
+
+INCLUDE_DIRECTORIES("test/testcpp/include")
+
+FILE(GLOB LIBTESTCPP_SRC
+	test/testcpp/src/[^.]*.cpp)
+
+ADD_LIBRARY(libtestcpp STATIC ${LIBTESTCPP_SRC})
+
+# --- ioccpp-test
+
+INCLUDE_DIRECTORIES("include")
+
+FILE (GLOB SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        test/src/[^.]*.cpp)
+
+ADD_EXECUTABLE(${PROJECT_NAME}-test ${SRC})
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}-test libtestcpp)
+
+IF(WIN32)
+
+  ADD_DEFINITIONS("/W4")
+
+ELSE(WIN32)
+
+  SET(CMAKE_CXX_COMPILER clang++)
+  ADD_DEFINITIONS("-Wall -Werror -ferror-limit=5")
+
+ENDIF(WIN32)
