@@ -5,6 +5,8 @@ Inversion of control/dependency injection container for C++03.
 
 Usage:
 
+    #include <ioccpp/ioc.h>
+    ...
     // in composition root/assembler
     IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
     ...
@@ -13,6 +15,8 @@ Usage:
 
 or, alternatively, use a factory function for lazy initialization/getting copies:
 
+    #include <ioccpp/ioc.h>
+    ...
     boost::shared_ptr<IPerson> developerFactory() { return boost::make_shared<Developer>(); }
     ...
     IoCContainer<IPerson>::RegisterFactory(developerFactory);
