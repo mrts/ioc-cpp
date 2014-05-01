@@ -47,13 +47,13 @@ public:
         IoCContainer<IPerson>::RegisterFactory(testerFactory);
 
         Tester::ResetCreationCount();
-        assertEqual(Tester::CreationCount(), 0);
+        assertEqual(Tester::CreationCount(), 0u);
 
         IoCContainer<IPerson>::ResolveNew();
         boost::shared_ptr<IPerson> person = IoCContainer<IPerson>::ResolveNew();
 
         assertEqual(person->role(), "Tester");
-        assertEqual(Tester::CreationCount(), 2);
+        assertEqual(Tester::CreationCount(), 2u);
     }
 
     void testScopedRegistration()

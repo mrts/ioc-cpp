@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 template <typename T>
-void IoCContainer<T>::Register(const IoCContainer::type_ptr& o)
+void IoCContainer<T>::Register(const typename IoCContainer::object_ptr& o)
 {
     if (!o)
         throw IoCError("Cannot register null object", typeid(T).name());
@@ -16,7 +16,7 @@ void IoCContainer<T>::Register(const IoCContainer::type_ptr& o)
 }
 
 template <typename T>
-void IoCContainer<T>::RegisterFactory(const IoCContainer::factory_ptr& f)
+void IoCContainer<T>::RegisterFactory(const typename IoCContainer::factory_ptr& f)
 {
     if (!f)
         throw IoCError("Cannot register null factory", typeid(T).name());
@@ -51,7 +51,7 @@ T& IoCContainer<T>::Resolve()
 }
 
 template <typename T>
-boost::shared_ptr<T> IoCContainer<T>::ResolveNew()
+typename IoCContainer<T>::object_ptr IoCContainer<T>::ResolveNew()
 {
     this_type& self = instance();
 

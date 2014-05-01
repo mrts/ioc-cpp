@@ -12,10 +12,10 @@ template <typename T>
 class IoCContainer
 {
 public:
-    typedef boost::shared_ptr<T> type_ptr;
-    typedef boost::function<type_ptr (void)> factory_ptr;
+    typedef boost::shared_ptr<T> object_ptr;
+    typedef boost::function<object_ptr (void)> factory_ptr;
 
-    static void Register(const type_ptr& object);
+    static void Register(const object_ptr& object);
     static void RegisterFactory(const factory_ptr& factory);
 
     static bool DoesInstanceExist();
@@ -23,10 +23,10 @@ public:
     static void Reset();
 
     static T& Resolve();
-    static type_ptr ResolveNew();
+    static object_ptr ResolveNew();
 
 private:
-    type_ptr object;
+    object_ptr object;
     factory_ptr factory;
 
     IoCContainer();
@@ -45,7 +45,7 @@ template <typename T>
 class IoCRegisterScoped
 {
 public:
-    explicit IoCRegisterScoped(const boost::shared_ptr<T>& t);
+    explicit IoCRegisterScoped(const boost::shared_ptr<T>& object);
     ~IoCRegisterScoped();
 
 private:
