@@ -31,10 +31,10 @@ public:
 
     void testLazySingleton()
     {
+        IoCContainer<IPerson>::RegisterFactory(managerFactory);
+
         IoCContainer<IPerson>::Reset();
         assertFalse(IoCContainer<IPerson>::DoesInstanceExist());
-
-        IoCContainer<IPerson>::RegisterFactory(managerFactory);
 
         IPerson& person = IoCContainer<IPerson>::Resolve();
 
