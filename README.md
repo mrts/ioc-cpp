@@ -18,6 +18,7 @@ or, alternatively, use a factory function for lazy initialization/getting copies
     IoCContainer<IPerson>::RegisterFactory(developerFactory);
     ...
     IPerson& person = IoCContainer<IPerson>::Resolve();
+    boost::shared_ptr<IPerson> newPerson = IoCContainer<IPerson>::ResolveNew();
 
 Note that you must create the symobol for each interface as follows:
 
