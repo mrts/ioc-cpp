@@ -5,7 +5,7 @@ Inversion of control/dependency injection container for C++03.
 
 Usage:
 
-    // in composition root
+    // in composition root/assembler
     IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
     ...
     // later in code
