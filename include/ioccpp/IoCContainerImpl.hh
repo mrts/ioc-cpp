@@ -9,7 +9,7 @@
 template <typename T>
 const char* getTypeName()
 {
-	return typeid(T).name();
+    return typeid(T).name();
 }
 
 template <typename T>
@@ -32,7 +32,9 @@ void IoCContainer<T>::RegisterFactory(const typename IoCContainer::factory_ptr& 
 
 template <typename T>
 bool IoCContainer<T>::DoesInstanceExist()
-{ return static_cast<bool>(instance().object); }
+{
+    return static_cast<bool>(instance().object);
+}
 
 template <typename T>
 void IoCContainer<T>::Reset()
