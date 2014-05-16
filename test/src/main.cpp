@@ -57,7 +57,19 @@ public:
 
     void testScopedRegistration()
     {
+        IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
+        IPerson& person = IoCContainer<IPerson>::Resolve();
+        assertEqual(person.role(), "Developer");
 
+        {
+            IoCRegisterScoped<IPerson> scopedRegistrationGuard(boost::make_shared<Tester>());
+            IPerson& scopedPerson = IoCContainer<IPerson>::Resolve();
+            assertEqual("Scoped registration guard overrides registered type inside a scope",
+                scopedPerson.role(), "Tester");
+        }
+
+        assertEqual("Original type is restored after registration guard goes out of scope",
+            person.role(), "Developer");
     }
 
     void testInvalidUsage()
