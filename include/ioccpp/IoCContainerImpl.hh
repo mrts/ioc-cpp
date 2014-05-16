@@ -7,10 +7,16 @@
 #include <stdexcept>
 
 template <typename T>
+const char* getTypeName()
+{
+	return typeid(T).name();
+}
+
+template <typename T>
 void IoCContainer<T>::Register(const typename IoCContainer::object_ptr& o)
 {
     if (!o)
-        throw IoCError("Cannot register null object", typeid(T).name());
+        throw IoCError("Cannot register null object", getTypeName<T>());
 
     instance().object = o;
 }
@@ -19,7 +25,7 @@ template <typename T>
 void IoCContainer<T>::RegisterFactory(const typename IoCContainer::factory_ptr& f)
 {
     if (!f)
-        throw IoCError("Cannot register null factory", typeid(T).name());
+        throw IoCError("Cannot register null factory", getTypeName<T>());
 
     instance().factory = f;
 }
@@ -53,7 +59,7 @@ T& IoCContainer<T>::Resolve()
         return *self.object;
     }
 
-    throw IoCError("Neither object nor factory registered", typeid(T).name());
+    throw IoCError("Neither object nor factory registered", getTypeName<T>());
 }
 
 template <typename T>
@@ -64,7 +70,7 @@ typename IoCContainer<T>::object_ptr IoCContainer<T>::ResolveNew()
     if (self.factory)
         return self.factory();
 
-    throw IoCError("Factory not registered", typeid(T).name());
+    throw IoCError("Factory not registered", getTypeName<T>());
 }
 
 template <typename T>
