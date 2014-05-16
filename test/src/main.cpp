@@ -21,8 +21,7 @@ public:
 
     void testSingleton()
     {
-        IoCContainer<IPerson>::Register(
-                boost::make_shared<Developer>());
+        IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
 
         IPerson& person = IoCContainer<IPerson>::Resolve();
 
@@ -63,7 +62,42 @@ public:
 
     void testInvalidUsage()
     {
+        assertThrows(TestIoC, TestMethod, IoCError,
+            *this, &TestIoC::resolveFromUninitializedContainer);
 
+        assertThrows(TestIoC, TestMethod, IoCError,
+            *this, &TestIoC::resolveFromUninitializedFactory);
+
+        assertThrows(TestIoC, TestMethod, IoCError,
+            *this, &TestIoC::registerNullObject);
+
+        assertThrows(TestIoC, TestMethod, IoCError,
+            *this, &TestIoC::registerNullFactory);
+    }
+
+    void resolveFromUninitializedContainer()
+    {
+        IoCContainer<IPerson>::Reset();
+        IoCContainer<IPerson>::ResetFactory();
+
+        IoCContainer<IPerson>::Resolve();
+    }
+
+    void resolveFromUninitializedFactory()
+    {
+        IoCContainer<IPerson>::ResetFactory();
+
+        IoCContainer<IPerson>::ResolveNew();
+    }
+
+    void registerNullObject()
+    {
+        IoCContainer<IPerson>::Register(boost::shared_ptr<IPerson>());
+    }
+
+    void registerNullFactory()
+    {
+        IoCContainer<IPerson>::RegisterFactory(NULL);
     }
 };
 
