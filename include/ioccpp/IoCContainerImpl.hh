@@ -35,6 +35,12 @@ void IoCContainer<T>::Reset()
 }
 
 template <typename T>
+void IoCContainer<T>::ResetFactory()
+{
+    instance().factory = NULL;
+}
+
+template <typename T>
 T& IoCContainer<T>::Resolve()
 {
     this_type& self = instance();

@@ -21,6 +21,7 @@ public:
     static bool DoesInstanceExist();
 
     static void Reset();
+    static void ResetFactory();
 
     static T& Resolve();
     static object_ptr ResolveNew();
