@@ -99,7 +99,10 @@ IoCRegisterScoped<T>::IoCRegisterScoped(const boost::shared_ptr<T>& object) :
 template <typename T>
 IoCRegisterScoped<T>::~IoCRegisterScoped()
 {
-    IoCContainer<T>::Register(old_object);
+    if (old_object)
+        IoCContainer<T>::Register(old_object);
+    else
+        IoCContainer<T>::Reset();
 }
 
 #endif /* IOCCONTAINERIMPL_HH */
