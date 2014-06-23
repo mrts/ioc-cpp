@@ -9,7 +9,7 @@
 class TestIoC : public Test::Suite
 {
 public:
-    TESTCPP_TYPEDEF_TESTMETHOD(TestIoC)
+    TESTCPP_TYPEDEFS(TestIoC)
 
     void test()
     {
@@ -74,17 +74,10 @@ public:
 
     void testInvalidUsage()
     {
-        assertThrows(TestIoC, TestMethod, IoCError,
-            *this, &TestIoC::resolveFromUninitializedContainer);
-
-        assertThrows(TestIoC, TestMethod, IoCError,
-            *this, &TestIoC::resolveFromUninitializedFactory);
-
-        assertThrows(TestIoC, TestMethod, IoCError,
-            *this, &TestIoC::registerNullObject);
-
-        assertThrows(TestIoC, TestMethod, IoCError,
-            *this, &TestIoC::registerNullFactory);
+        assertThrows(resolveFromUninitializedContainer, IoCError);
+        assertThrows(resolveFromUninitializedFactory, IoCError);
+        assertThrows(registerNullObject, IoCError);
+        assertThrows(registerNullFactory, IoCError);
     }
 
     void resolveFromUninitializedContainer()
