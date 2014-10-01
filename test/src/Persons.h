@@ -1,8 +1,16 @@
 #ifndef PERSONS_H__
 #define PERSONS_H__
 
+#include <ioccpp/detect_cpp11.h>
+
+#ifdef IOCCPP_HAVE_CPP11
+#include <memory>
+namespace stdutil = std;
+#else
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+namespace stdutil = boost;
+#endif
 
 class IPerson
 {
@@ -44,14 +52,14 @@ private:
     static unsigned int creationCount;
 };
 
-inline boost::shared_ptr<IPerson> managerFactory()
+inline stdutil::shared_ptr<IPerson> managerFactory()
 {
-    return boost::make_shared<Manager>();
+    return stdutil::make_shared<Manager>();
 }
 
-inline boost::shared_ptr<IPerson> testerFactory()
+inline stdutil::shared_ptr<IPerson> testerFactory()
 {
-    return boost::make_shared<Tester>();
+    return stdutil::make_shared<Tester>();
 }
 
 #endif /* PERSONS_H */

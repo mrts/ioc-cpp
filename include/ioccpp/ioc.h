@@ -1,8 +1,19 @@
 #ifndef IOCCPP_IOC_H__
 #define IOCCPP_IOC_H__
 
+#include <stdexcept>
+
+#include "detect_cpp11.h"
+
+#ifdef IOCCPP_HAVE_CPP11
+#include <memory>
+#include <functional>
+namespace stdutil = std;
+#else
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+namespace stdutil = boost;
+#endif
 
 template <typename T>
 class IoCRegisterScoped;
@@ -12,8 +23,8 @@ template <typename T>
 class IoCContainer
 {
 public:
-    typedef boost::shared_ptr<T> object_ptr;
-    typedef boost::function<object_ptr (void)> factory_ptr;
+    typedef stdutil::shared_ptr<T> object_ptr;
+    typedef stdutil::function<object_ptr(void)> factory_ptr;
 
     static void Register(const object_ptr& object);
     static void RegisterFactory(const factory_ptr& factory);
@@ -24,6 +35,7 @@ public:
     static void ResetFactory();
 
     static T& Resolve();
+    static object_ptr ResolvePtr();
     static object_ptr ResolveNew();
 
 private:
@@ -46,11 +58,13 @@ template <typename T>
 class IoCRegisterScoped
 {
 public:
-    explicit IoCRegisterScoped(const boost::shared_ptr<T>& object);
+    typedef stdutil::shared_ptr<T> object_ptr;
+
+    explicit IoCRegisterScoped(const object_ptr& object);
     ~IoCRegisterScoped();
 
 private:
-    boost::shared_ptr<T> old_object;
+    object_ptr old_object;
 };
 
 class IoCError : public std::runtime_error

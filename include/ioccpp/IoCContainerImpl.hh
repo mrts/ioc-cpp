@@ -45,7 +45,11 @@ void IoCContainer<T>::Reset()
 template <typename T>
 void IoCContainer<T>::ResetFactory()
 {
+#ifdef IOCCPP_HAVE_CPP11
+    instance().factory = nullptr;
+#else
     instance().factory = NULL;
+#endif
 }
 
 template <typename T>
@@ -59,6 +63,23 @@ T& IoCContainer<T>::Resolve()
     if (self.factory) {
         Register(self.factory());
         return *self.object;
+    }
+
+    throw IoCError("Neither object nor factory registered", getTypeName<T>());
+}
+
+template <typename T>
+typename IoCContainer<T>::object_ptr IoCContainer<T>::ResolvePtr()
+{
+    // TODO: is it possible to keep efficiency but get rid of DRY violation?
+    this_type& self = instance();
+
+    if (self.object)
+        return self.object;
+
+    if (self.factory) {
+        Register(self.factory());
+        return self.object;
     }
 
     throw IoCError("Neither object nor factory registered", getTypeName<T>());
@@ -90,7 +111,7 @@ IoCContainer<T>& IoCContainer<T>::instance()
 
 
 template <typename T>
-IoCRegisterScoped<T>::IoCRegisterScoped(const boost::shared_ptr<T>& object) :
+IoCRegisterScoped<T>::IoCRegisterScoped(const typename IoCRegisterScoped::object_ptr& object) :
     old_object(IoCContainer<T>::instance().object)
 {
     IoCContainer<T>::Register(object);

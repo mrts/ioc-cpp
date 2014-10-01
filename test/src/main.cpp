@@ -4,8 +4,6 @@
 
 #include <testcpp/testcpp.h>
 
-#include <boost/make_shared.hpp>
-
 class TestIoC : public Test::Suite
 {
 public:
@@ -21,11 +19,14 @@ public:
 
     void testSingleton()
     {
-        IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
+        IoCContainer<IPerson>::Register(stdutil::make_shared<Developer>());
 
         IPerson& person = IoCContainer<IPerson>::Resolve();
+        stdutil::shared_ptr<IPerson> person_ptr =
+            IoCContainer<IPerson>::ResolvePtr();
 
         assertEqual(person.role(), "Developer");
+        assertEqual(person_ptr->role(), "Developer");
     }
 
     void testLazySingleton()
@@ -49,7 +50,8 @@ public:
         assertEqual(Tester::CreationCount(), 0u);
 
         IoCContainer<IPerson>::ResolveNew();
-        boost::shared_ptr<IPerson> person = IoCContainer<IPerson>::ResolveNew();
+        stdutil::shared_ptr<IPerson> person =
+            IoCContainer<IPerson>::ResolveNew();
 
         assertEqual(person->role(), "Tester");
         assertEqual(Tester::CreationCount(), 2u);
@@ -57,12 +59,13 @@ public:
 
     void testScopedRegistration()
     {
-        IoCContainer<IPerson>::Register(boost::make_shared<Developer>());
+        IoCContainer<IPerson>::Register(stdutil::make_shared<Developer>());
         IPerson& person = IoCContainer<IPerson>::Resolve();
         assertEqual(person.role(), "Developer");
 
         {
-            IoCRegisterScoped<IPerson> scopedRegistrationGuard(boost::make_shared<Tester>());
+            IoCRegisterScoped<IPerson> scopedRegistrationGuard(
+                stdutil::make_shared<Tester>());
             IPerson& scopedPerson = IoCContainer<IPerson>::Resolve();
             assertEqual("Scoped registration guard overrides registered type inside a scope",
                 scopedPerson.role(), "Tester");
@@ -97,12 +100,16 @@ public:
 
     void registerNullObject()
     {
-        IoCContainer<IPerson>::Register(boost::shared_ptr<IPerson>());
+        IoCContainer<IPerson>::Register(stdutil::shared_ptr<IPerson>());
     }
 
     void registerNullFactory()
     {
+#ifdef IOCCPP_HAVE_CPP11
+        IoCContainer<IPerson>::RegisterFactory(nullptr);
+#else
         IoCContainer<IPerson>::RegisterFactory(NULL);
+#endif
     }
 };
 
